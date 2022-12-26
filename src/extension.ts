@@ -178,7 +178,7 @@ class CustomSidebarViewProvider implements vscode.WebviewViewProvider {
 
         // default webview will show doom face 0
         webviewView.webview.html = this.getHtmlContent(webviewView.webview, 0);
-        
+
         //:TODO optimization of verification
         // This is called every second is decides which doom face to show in the webview
         setInterval(() => {
@@ -203,6 +203,7 @@ class CustomSidebarViewProvider implements vscode.WebviewViewProvider {
         }, 1000);
     }
 
+    // This function search and show image in assets
     private getHtmlContent(webview: vscode.Webview, n: number): string {
         const stylesheetUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "assets", "main.css"));
 

@@ -3,6 +3,7 @@
 // https://github.com/microsoft/vscode-extension-samples/tree/main/webview-sample
 // https://github.com/microsoft/vscode-extension-samples/tree/main/webview-view-sample
 // https://code.visualstudio.com/api/extension-guides/webview
+// https://github.com/ttoowa/InYourFace_incredible
 // and more that I can't find anymore
 
 "use strict";
@@ -176,57 +177,38 @@ class CustomSidebarViewProvider implements vscode.WebviewViewProvider {
         };
 
         // default webview will show doom face 0
-        webviewView.webview.html = this.getHtmlContent0(webviewView.webview);
-
+        webviewView.webview.html = this.getHtmlContent(webviewView.webview, 0);
+        
+        //:TODO optimization of verification
         // This is called every second is decides which doom face to show in the webview
         setInterval(() => {
             let errors = getNumErrors();
             if (errors === 0) {
-                webviewView.webview.html = this.getHtmlContent0(webviewView.webview);
+                webviewView.webview.html = this.getHtmlContent(webviewView.webview, 0);
             } else if (errors < 5) {
-                webviewView.webview.html = this.getHtmlContent1(webviewView.webview);
+                webviewView.webview.html = this.getHtmlContent(webviewView.webview, 1);
             } else if (errors < 10) {
-                webviewView.webview.html = this.getHtmlContent2(webviewView.webview);
-            } else {
-                webviewView.webview.html = this.getHtmlContent3(webviewView.webview);
+                webviewView.webview.html = this.getHtmlContent(webviewView.webview, 2);
+            } else if (errors < 20){
+                webviewView.webview.html = this.getHtmlContent(webviewView.webview, 3);
+            } else if (errors < 30){
+                webviewView.webview.html = this.getHtmlContent(webviewView.webview, 4);
+            } else if (errors < 40){
+                webviewView.webview.html = this.getHtmlContent(webviewView.webview, 5);
+            } else if (errors < 100){
+                webviewView.webview.html = this.getHtmlContent(webviewView.webview, 6);
+            } else{
+                webviewView.webview.html = this.getHtmlContent(webviewView.webview, 7);
             }
         }, 1000);
     }
 
-    // This is doom face 0
-    private getHtmlContent0(webview: vscode.Webview): string {
+    private getHtmlContent(webview: vscode.Webview, n: number): string {
         const stylesheetUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "assets", "main.css"));
 
-        const face0 = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "assets", "incredible0.png"));
+        const face = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "assets", `incredible${n}.png`));
 
-        return getHtml(face0);
-    }
-
-    // This is doom face 1
-    private getHtmlContent1(webview: vscode.Webview): string {
-        const stylesheetUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "assets", "main.css"));
-
-        const face1 = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "assets", "incredible1.png"));
-
-        return getHtml(face1);
-    }
-
-    // This is doom face 2
-    private getHtmlContent2(webview: vscode.Webview): string {
-        const stylesheetUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "assets", "main.css"));
-
-        const face2 = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "assets", "incredible2.png"));
-
-        return getHtml(face2);
-    }
-
-    // This is doom face 3
-    private getHtmlContent3(webview: vscode.Webview): string {
-        const stylesheetUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "assets", "main.css"));
-
-        const face3 = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "assets", "incredible3.png"));
-
-        return getHtml(face3);
+        return getHtml(face);
     }
 }
 
